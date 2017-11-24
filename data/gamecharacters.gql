@@ -1,0 +1,61 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+# The query type, represents all of the entry points into our object graph
+type Query {
+  gameCharacters: [GameCharacter]
+  gameCharacter(id: ID!): GameCharacter
+}
+
+# The mutation type, represents all updates we can make to our data
+type Mutation {
+  # Characters
+  addCharacter(char: GameCharacterInput!): GameCharacter
+}
+
+# A user that is signed in
+type User {
+  id: ID!
+  userName: String!
+  email: String!
+  token: String!
+}
+
+# A character a game
+interface GameCharacter {
+  # The ID of the character
+  id: ID!
+  # The name of the character
+  name: String!
+  # The game this character appeared in first
+  debutGame: String!
+  # The release date of the game
+  releaseYear: Int!
+  # URL to an image of the character
+  img: String!
+  # A longer description of the character
+  desc: String!
+  # A link to an article of the character
+  wiki: String!
+  # Defines whether this character is publicly accessible
+  public: Boolean!
+  # The owning user
+  owner: String!
+}
+
+input GameCharacterInput {
+  # The name of the character
+  name: String!
+  # The game this character appeared in first
+  debutGame: String!
+  # The release date of the game
+  releaseYear: Int!
+  # URL to an image of the character
+  img: String!
+  # Defines whether this character is publicly accessible
+  public: Boolean!
+  # The owning user
+  owner: String!
+}
