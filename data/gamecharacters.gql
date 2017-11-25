@@ -54,6 +54,10 @@ input GameCharacterInput {
   releaseYear: Int!
   # URL to an image of the character
   img: String!
+  # A longer description of the character
+  desc: String!
+  # A link to an article of the character
+  wiki: String!
   # Defines whether this character is publicly accessible
   public: Boolean!
   # The owning user

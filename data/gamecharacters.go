@@ -220,6 +220,8 @@ type gameCharacterInput struct {
 	DebutGame   string
 	ReleaseYear int32
 	Img         string
+	Desc        string
+	Wiki        string
 	Public      bool
 	Owner       string
 }
@@ -234,6 +236,8 @@ func (r *Resolver) AddCharacter(args *struct {
 		DebutGame:   args.Char.DebutGame,
 		ReleaseYear: args.Char.ReleaseYear,
 		Img:         args.Char.Img,
+		Desc:        args.Char.Desc,
+		Wiki:        args.Char.Wiki,
 		Public:      args.Char.Public,
 		Owner:       args.Char.Owner,
 	}
