@@ -89,6 +89,12 @@ type userInputValidationError struct {
 	Err  string `json:"error"`
 }
 
+type userLoginResult struct {
+	Status  string `json:"status"`
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+}
+
 func signUpHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		http.Error(w, "Only POST ist allowed", 500)
@@ -196,7 +202,14 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		b := tx.Bucket([]byte("Users"))
 		entry := b.Get([]byte(uinput.UserName))
 		if entry == nil {
-			http.Error(w, "Username or password is wrong", 401)
+
+			msg, err := json.Marshal(userLoginResult{
+				Status:  "error",
+				Code:    401,
+				Message: "Username or password is wrong",
+			})
+			check(err)
+			http.Error(w, string(msg), 401)
 			return nil
 		}
 		var dbUser data.UserDbModel
@@ -208,7 +221,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 			setSessionOnClient(w, r, uinput.UserName)
 		} else {
 			// Password is wrong, send error. Username is checked above.
-			http.Error(w, "Username or password is wrong", 401)
+			http.Error(w, "{ error: \"Username or password is wrong\" }", 401)
 			return nil
 		}
 
