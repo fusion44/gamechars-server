@@ -22,6 +22,11 @@ type gameCharacter struct {
 	Owner       string
 }
 
+type result struct {
+	Op    string
+	Count int32
+}
+
 // gameCharacters some hardcoded data to work with
 var gameCharacters = []*gameCharacter{
 	{
@@ -100,6 +105,18 @@ func init() {
 
 // Resolver type holds all the specialized resolvers that implement GQL queries and mutations
 type Resolver struct{}
+
+type resultResolver struct {
+	result *result
+}
+
+func (gcr *resultResolver) Op() string {
+	return gcr.result.Op
+}
+
+func (gcr *resultResolver) Count() int32 {
+	return gcr.result.Count
+}
 
 // GameCharacter gets one character by its ID
 func (r *Resolver) GameCharacter(ctx context.Context, args struct {
@@ -243,4 +260,37 @@ func (r *Resolver) AddCharacter(args *struct {
 	}
 	gameCharacterData[gc.ID] = gc
 	return &gameCharacterResolver{gc}
+}
+
+func (r *Resolver) RemoveCharacter(ctx context.Context, args *struct {
+	ID graphql.ID
+}) *resultResolver {
+	res := result{
+		Op:    "delete",
+		Count: 0,
+	}
+
+	// Get authentication data
+	auth, err := utils.GetContextAuthData(ctx)
+	if err != nil {
+		fmt.Println(err.Error())
+		return &resultResolver{&res}
+	}
+
+	// Check if there is data to delete
+	before := len(gameCharacterData)
+	if before < 1 {
+		fmt.Println("No characters to delete")
+		return &resultResolver{&res}
+	}
+
+	if gc := gameCharacterData[args.ID]; gc != nil {
+		// Check the first
+		if gc.Owner == auth.UserName {
+			delete(gameCharacterData, args.ID)
+			res.Count = int32(before - len(gameCharacterData))
+		}
+	}
+
+	return &resultResolver{&res}
 }

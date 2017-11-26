@@ -22,8 +22,8 @@ Make sure you have golang working correctly on
 * [x] Session Handling
 * [x] Retrieve Character(s)
 * [x] Logged in users can add new characters
-* [ ] Game characters can be marked as public or private to restrict access
-* [ ] Game characters can be deleted
+* [x] Game characters can be marked as public or private to restrict access
+* [x] Game characters can be deleted
 
 ## Tests
 

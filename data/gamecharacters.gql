@@ -13,6 +13,7 @@ type Query {
 type Mutation {
   # Characters
   addCharacter(char: GameCharacterInput!): GameCharacter
+  removeCharacter(id: ID!): Result
 }
 
 # A user that is signed in
@@ -21,6 +22,11 @@ type User {
   userName: String!
   email: String!
   token: String!
+}
+
+type Result {
+  op: String!
+  count: Int!
 }
 
 # A character a game
